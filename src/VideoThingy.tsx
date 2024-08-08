@@ -34,7 +34,9 @@ export const VideoTile = ({width, height, title, videoUrl, thumbnailUrl, isPlayi
                             <img src={thumbnailUrl} alt={title}/>
                         </a>
                         <button style={{
-                            display: 'inline-block',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
                             width: 64,
                             height: 64,
                             borderRadius: 32,
@@ -42,7 +44,18 @@ export const VideoTile = ({width, height, title, videoUrl, thumbnailUrl, isPlayi
                             position: 'absolute',
                             top: 'calc(50% - 32px)',
                             left: 'calc(50% - 32px)'
-                        }} onClick={typeof onClick === 'function' ? onClick : undefined}/>
+                        }} onClick={typeof onClick === 'function' ? onClick : undefined}>
+                            <span style={{
+                                display: 'inline-block',
+                                marginLeft: 8,
+                                width: 0,
+                                height: 0,
+                                borderLeft: '20px solid white',
+                                borderTop:  '12px solid transparent',
+                                borderRight: 0,
+                                borderBottom: '12px solid transparent'
+                            }}/>
+                        </button>
                         <span style={{
                             position: 'absolute',
                             bottom: 12,
