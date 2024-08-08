@@ -1,6 +1,8 @@
-import ReactPlayer from "react-player";
-import React, {PropsWithChildren, useState} from "react";
-import {VNode} from "preact";
+import ReactPlayer from 'react-player/youtube'
+
+import {cloneElement, VNode} from 'preact';
+import { useState} from 'preact/hooks'
+import type { ComponentChild } from "preact";
 
 const overlayStyles = {
     position: 'relative'
@@ -35,6 +37,16 @@ export const VideoTile = ({title, videoUrl, thumbnailUrl, isPlaying = false, onC
                         <a onClick={typeof onClick === 'function' ? onClick : undefined}>
                             <img src={thumbnailUrl} alt={title}/>
                         </a>
+                        <button style={{
+                            display: 'inline-block',
+                            width: 64,
+                            height: 64,
+                            borderRadius: 32,
+                            backgroundColor: 'red',
+                            position: 'absolute',
+                            top: 'calc(50% - 32px)',
+                            left: 'calc(50% - 32px)'
+                        }} onClick={typeof onClick === 'function' ? onClick : undefined}/>
                         <span style={{
                             position: 'absolute',
                             bottom: 12,
@@ -42,32 +54,33 @@ export const VideoTile = ({title, videoUrl, thumbnailUrl, isPlaying = false, onC
                             padding: 4,
                             background: 'red',
                             color: 'white',
-                            fontSize: 16 }}>
+                            fontSize: 16
+                        }}>
                             {title}
                         </span>
                     </div>
                 )}
-                {isPlaying && (
-                    <ReactPlayer
-                        playing={isPlaying}
-                        width={280}
-                        height={500}
-                        config={{
-                            youtube: {
-                                embedOptions: {}
-                            }
-                        }}
-                        url={videoUrl}/>
-                )}
+                {isPlaying && (<ReactPlayer
+                    playing={isPlaying}
+                    width={280}
+                    height={500}
+                    config={{
+                        youtube: {
+                            embedOptions: {}
+                        }
+                    }}
+                    url={videoUrl}/>)}
+
             </div>
         </div>
     )
 }
 
-type VideListProps = PropsWithChildren<{
+type VideoListProps = {
     videos: Video[];
-}>
-export const VideoList = ({videos, children}: VideListProps) => {
+    children: ComponentChild;
+}
+export const VideoList = ({videos, children}: VideoListProps) => {
 
     const [playingIndex, setPlayingIndex] = useState<number | undefined>(undefined);
     return (
@@ -81,7 +94,7 @@ export const VideoList = ({videos, children}: VideListProps) => {
                         console.log(index);
                         setPlayingIndex(index)
                     }
-                    return React.cloneElement(children as VNode, {...video, isPlaying: (index === playingIndex), onClick});
+                    return cloneElement(children as VNode, {...video, isPlaying: (index === playingIndex), onClick});
                 })
             }
         </div>
