@@ -1,8 +1,7 @@
 import ReactPlayer from 'react-player/youtube'
 
-import {cloneElement, VNode} from 'preact';
+import {VNode} from 'preact';
 import { useState} from 'preact/hooks'
-import type { ComponentChild } from "preact";
 
 const overlayStyles = {
     position: 'relative'
@@ -16,15 +15,12 @@ type Video = {
     title: string;
 }
 
-type VideoTileProps = {
-    title?: string;
-    thumbnailUrl?: string;
-    videoUrl?: string;
+type VideoTileProps = Video & {
     isPlaying?: boolean;
     onClick?: () => void;
 }
 
-export const VideoTile = ({title, videoUrl, thumbnailUrl, isPlaying = false, onClick}: VideoTileProps) => {
+export const VideoTile = ({width, height, title, videoUrl, thumbnailUrl, isPlaying = false, onClick}: VideoTileProps) => {
 
     return (
         <div className="video-tile" style={{ padding: 2}}>
@@ -62,8 +58,8 @@ export const VideoTile = ({title, videoUrl, thumbnailUrl, isPlaying = false, onC
                 )}
                 {isPlaying && (<ReactPlayer
                     playing={isPlaying}
-                    width={280}
-                    height={500}
+                    width={width}
+                    height={height}
                     url={videoUrl}/>)}
 
             </div>
@@ -73,9 +69,9 @@ export const VideoTile = ({title, videoUrl, thumbnailUrl, isPlaying = false, onC
 
 type VideoListProps = {
     videos: Video[];
-    children: ComponentChild;
+    renderer: (video: Video, isPlaying: boolean, onClick: () => void) => VNode<any>
 }
-export const VideoList = ({videos, children}: VideoListProps) => {
+export const VideoList = ({videos, renderer}: VideoListProps) => {
 
     const [playingIndex, setPlayingIndex] = useState<number | undefined>(undefined);
     return (
@@ -83,13 +79,13 @@ export const VideoList = ({videos, children}: VideoListProps) => {
             display: 'flex',
             justifyContent: 'center'
         }}>
-            { children &&
+            { renderer &&
                 videos.map((video: Video, index: number) => {
                     const onClick = () => {
                         console.log(index);
                         setPlayingIndex(index)
                     }
-                    return cloneElement(children as VNode, {...video, isPlaying: (index === playingIndex), onClick});
+                    return renderer(video, (index === playingIndex), onClick);
                 })
             }
         </div>

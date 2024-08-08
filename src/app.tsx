@@ -33,11 +33,11 @@ const videos = [
 ]
 
 export function App() {
-  return (
-    <>
-        <VideoList videos={videos}>
-            <VideoTile/>
-        </VideoList>
-    </>
-  )
+    return (
+        <>
+            <VideoList videos={videos} renderer={(video, isPlaying, onClick) => (
+                <VideoTile {...video} isPlaying={isPlaying} onClick={onClick}/>
+            )}/>
+        </>
+    )
 }
