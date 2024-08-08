@@ -64,11 +64,6 @@ export const VideoTile = ({title, videoUrl, thumbnailUrl, isPlaying = false, onC
                     playing={isPlaying}
                     width={280}
                     height={500}
-                    config={{
-                        youtube: {
-                            embedOptions: {}
-                        }
-                    }}
                     url={videoUrl}/>)}
 
             </div>
